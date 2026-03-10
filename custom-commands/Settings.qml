@@ -83,7 +83,6 @@ ColumnLayout {
         id: commandsScrollView
         Layout.fillWidth: true
         Layout.preferredHeight: Math.min(commandsColumn.implicitHeight, 400)
-        horizontalPolicy: ScrollBar.AlwaysOff
         showScrollbarWhenScrollable: true
         gradientColor: "transparent"
 
