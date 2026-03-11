@@ -54,6 +54,10 @@ Variants {
 
     property bool _resetToken: false
 
+    function _tr(key, interp) {
+        return annotateVariants.mainInstance?.pluginApi?.tr(key, interp ?? {}) ?? key
+    }
+
     function hide() { isVisible = false }
 
     model: Quickshell.screens
@@ -88,6 +92,7 @@ Variants {
         property real textY: 0
         property bool pixelImgReady: false
         property bool showPopover: false
+        property int _pixelCacheBust: 0
 
         property real _pendingZoomScale: 1.0
         property real panX: 0.0
@@ -133,23 +138,31 @@ Variants {
             id: pixelateProc
             onExited: (code) => {
                 if (code === 0) {
+                    overlayWin._pixelCacheBust++
                     overlayWin.pixelImgReady = false
                     overlayWin.pixelImgReady = true
                 }
             }
         }
 
+        property string _lastPreparedPath: ""
+
         function preparePixelImage() {
+            if (annotateVariants.imagePath === overlayWin._lastPreparedPath && overlayWin.pixelImgReady) {
+                drawCanvas.requestPaint()
+                return
+            }
+            overlayWin._lastPreparedPath = annotateVariants.imagePath
             pixelImgReady = false
             pixelateProc.exec({ command: [
                 "bash", "-c",
-                "magick /tmp/screen-toolkit-annotate.png -scale 5% -scale 2000% /tmp/screen-toolkit-annotate-pixel.png"
+                "magick /tmp/screen-toolkit-annotate.png -scale 5% -scale 2000% /tmp/screen-toolkit-annotate-pixel.png 2>/dev/null"
             ]})
         }
 
         onPixelImgReadyChanged: {
             if (pixelImgReady) {
-                drawCanvas.unloadImage("file:///tmp/screen-toolkit-annotate-pixel.png")
+                drawCanvas.unloadImage("file:///tmp/screen-toolkit-annotate-pixel.png?" + (overlayWin._pixelCacheBust - 1))
                 drawCanvas.requestPaint()
             }
         }
@@ -167,17 +180,28 @@ Variants {
             }
         }
 
-        Process { id: copyProc }
+        Process {
+            id: copyProc
+            onExited: (code) => {
+                overlayWin.isSaving = false
+                if (code === 0) {
+                    ToastService.showNotice(annotateVariants._tr("annotate.copied"), "", "copy")
+                    annotateVariants.hide()
+                } else {
+                    ToastService.showError(annotateVariants._tr("annotate.copyFailed"))
+                }
+            }
+        }
 
         Process {
             id: saveProc
             onExited: (code) => {
                 overlayWin.isSaving = false
                 if (code === 0) {
-                    ToastService.showNotice("Copied to clipboard", "", "copy")
+                    ToastService.showNotice(annotateVariants._tr("annotate.copied"), "", "copy")
                     annotateVariants.hide()
                 } else {
-                    ToastService.showError("Failed to save annotation")
+                    ToastService.showError(annotateVariants._tr("annotate.saveFailed"))
                 }
             }
         }
@@ -190,10 +214,10 @@ Variants {
                 overlayWin.isSaving = false
                 if (code === 0) {
                     var dest = saveFileProc.stdout.text.trim()
-                    ToastService.showNotice("Saved to " + (dest !== "" ? dest : "~/Pictures"), saveFileProc.savedPath, "device-floppy")
+                    ToastService.showNotice(annotateVariants._tr("annotate.savedTo", { dest: dest !== "" ? dest : "~/Pictures" }), saveFileProc.savedPath, "device-floppy")
                     annotateVariants.hide()
                 } else {
-                    ToastService.showError("Failed to save file")
+                    ToastService.showError(annotateVariants._tr("annotate.saveFileFailed"))
                 }
             }
         }
@@ -216,6 +240,7 @@ Variants {
                     overlayWin.textMode = false
                     overlayWin.showPopover = false
                     overlayWin.pixelImgReady = false
+                    overlayWin._lastPreparedPath = ""
                     overlayWin.panX = 0.0
                     overlayWin.panY = 0.0
                     overlayWin.isPanning = false
@@ -292,7 +317,7 @@ Variants {
                         x: -parent.x; y: -parent.y
                         width: annotateVariants.regionW
                         height: annotateVariants.regionH
-                        source: overlayWin.pixelImgReady ? "file:///tmp/screen-toolkit-annotate-pixel.png?" + Date.now() : ""
+                        source: overlayWin.pixelImgReady ? "file:///tmp/screen-toolkit-annotate-pixel.png?" + overlayWin._pixelCacheBust : ""
                         fillMode: Image.Stretch; cache: false; smooth: false
                     }
                 }
@@ -338,7 +363,7 @@ Variants {
             onPaint: {
                 var ctx = getContext("2d")
                 ctx.clearRect(0, 0, width, height)
-                var pixUrl = "file:///tmp/screen-toolkit-annotate-pixel.png"
+                var pixUrl = "file:///tmp/screen-toolkit-annotate-pixel.png?" + overlayWin._pixelCacheBust
                 if (overlayWin.pixelImgReady && !isImageLoaded(pixUrl)) loadImage(pixUrl)
                 for (var i = 0; i < overlayWin.strokes.length; i++)
                     drawStroke(ctx, overlayWin.strokes[i])
@@ -357,7 +382,7 @@ Variants {
                     var bx = Math.min(stroke.x1, stroke.x2), by = Math.min(stroke.y1, stroke.y2)
                     var bw = Math.abs(stroke.x2 - stroke.x1), bh = Math.abs(stroke.y2 - stroke.y1)
                     if (bw > 0 && bh > 0) {
-                        var pixUrl = "file:///tmp/screen-toolkit-annotate-pixel.png"
+                        var pixUrl = "file:///tmp/screen-toolkit-annotate-pixel.png?" + overlayWin._pixelCacheBust
                         if (isImageLoaded(pixUrl)) {
                             ctx.save()
                             ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip()
@@ -453,7 +478,7 @@ Variants {
                 visible: overlayWin.textMode
                 x: overlayWin.textX
                 y: overlayWin.textY - height
-                width: 300
+                width: Math.min(300, drawCanvas.width - x - 4)
                 color: overlayWin.drawColor
                 font.pixelSize: overlayWin.drawSize * 5 + 12
                 font.bold: true
@@ -662,7 +687,7 @@ Variants {
                         Behavior on scale { NumberAnimation { duration: 80 } }
                         MouseArea { id: colorBtnH; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                             onClicked: overlayWin.showPopover = !overlayWin.showPopover
-                            onEntered: TooltipService.show(parent, "Color & size"); onExited: TooltipService.hide() }
+                            onEntered: TooltipService.show(parent, annotateVariants._tr("annotate.colorSize")); onExited: TooltipService.hide() }
                     }
 
                     ToolbarSeparator {}
@@ -717,7 +742,7 @@ Variants {
                         Behavior on scale { NumberAnimation { duration: 80 } }
                         MouseArea { id: colorBtnV; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                             onClicked: overlayWin.showPopover = !overlayWin.showPopover
-                            onEntered: TooltipService.show(parent, "Color & size"); onExited: TooltipService.hide() }
+                            onEntered: TooltipService.show(parent, annotateVariants._tr("annotate.colorSize")); onExited: TooltipService.hide() }
                     }
 
                     ToolbarSeparator {}
@@ -863,10 +888,7 @@ Variants {
             if (overlayWin.isSaving) return
             overlayWin.isSaving = true
             if (annotateVariants.zoomScale > 1.0) {
-                copyProc.exec({ command: ["bash", "-c", "wl-copy < " + annotateVariants.imagePath + " && echo ok"] })
-                overlayWin.isSaving = false
-                ToastService.showNotice("Copied to clipboard", "", "copy")
-                annotateVariants.hide()
+                copyProc.exec({ command: ["bash", "-c", "wl-copy < " + annotateVariants.imagePath] })
             } else {
                 drawCanvas.grabToImage(function(result) {
                     result.saveToFile("/tmp/screen-toolkit-overlay.png")

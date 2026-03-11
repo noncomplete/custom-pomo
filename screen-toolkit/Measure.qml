@@ -83,8 +83,8 @@ Variants {
         property var _shotMeasure: null
         property string _shotColor: "#ffffff"
 
-        function _tr(key) {
-            return measureVariants.mainInstance?.pluginApi?.tr(key) ?? key
+        function _tr(key, interp) {
+            return measureVariants.mainInstance?.pluginApi?.tr(key, interp ?? {}) ?? key
         }
 
         Process {
@@ -95,7 +95,7 @@ Variants {
                 measureVariants.isVisible = true
                 if (code === 0) {
                     var dest = shotProc.stdout.text.trim()
-                    ToastService.showNotice("Saved to " + (dest !== "" ? dest : "~/Pictures"), "", "camera")
+                    ToastService.showNotice(overlayWin._tr("messages.measure-saved", { dest: dest !== "" ? dest : "~/Pictures" }), "", "camera")
                 } else
                     ToastService.showError(overlayWin._tr("messages.measure-failed"))
             }
@@ -265,12 +265,12 @@ Variants {
                 visible: !overlayWin.measuring && !overlayWin.current && overlayWin.pinned.length === 0
                 NIcon { icon: "ruler"; color: "white"; anchors.horizontalCenter: parent.horizontalCenter; scale: 2 }
                 NText {
-                    text: "Click and drag to measure"
+                    text: overlayWin._tr("measure.hint")
                     color: "white"; font.weight: Font.Bold; pointSize: Style.fontSizeL
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 NText {
-                    text: "Pin to keep it · drag again to replace · ESC to close"
+                    text: overlayWin._tr("measure.subHint")
                     color: Qt.rgba(1,1,1,0.5); pointSize: Style.fontSizeS
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
@@ -414,7 +414,7 @@ Variants {
                     NIcon { anchors.centerIn: parent; icon: "copy"; color: acopyBtn.containsMouse ? Color.mOnPrimary : Color.mOnSurface; scale: 0.85 }
                     MouseArea { id: acopyBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: { measureVariants.copyResult(overlayWin.curDist + "px (" + Math.round(overlayWin.curW) + "×" + Math.round(overlayWin.curH) + ")"); ToastService.showNotice(overlayWin._tr("messages.measure-copied")) }
-                        onEntered: TooltipService.show(acopyBtn, "Copy measurement"); onExited: TooltipService.hide()
+                        onEntered: TooltipService.show(acopyBtn, overlayWin._tr("measure.copyMeasurement")); onExited: TooltipService.hide()
                     }
                 }
 
@@ -424,7 +424,7 @@ Variants {
                     NIcon { anchors.centerIn: parent; icon: "camera"; color: ascreenshotBtn.containsMouse ? Color.mOnPrimary : Color.mOnSurface; scale: 0.85 }
                     MouseArea { id: ascreenshotBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: overlayWin.doScreenshot(overlayWin.current, "#ffffff")
-                        onEntered: TooltipService.show(ascreenshotBtn, "Screenshot with lines"); onExited: TooltipService.hide()
+                        onEntered: TooltipService.show(ascreenshotBtn, overlayWin._tr("measure.screenshot")); onExited: TooltipService.hide()
                     }
                 }
 
@@ -434,7 +434,7 @@ Variants {
                     NIcon { anchors.centerIn: parent; icon: "pin"; color: pinBtn.containsMouse ? Color.mOnPrimary : Color.mOnSurface; scale: 0.85 }
                     MouseArea { id: pinBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: { overlayWin.doPin(); ToastService.showNotice(overlayWin._tr("messages.measure-pinned")) }
-                        onEntered: TooltipService.show(pinBtn, "Pin"); onExited: TooltipService.hide()
+                        onEntered: TooltipService.show(pinBtn, overlayWin._tr("measure.pin")); onExited: TooltipService.hide()
                     }
                 }
 
@@ -444,7 +444,7 @@ Variants {
                     NIcon { anchors.centerIn: parent; icon: "x"; color: discardBtn.containsMouse ? Color.mError || "#f44336" : Color.mOnSurface; scale: 0.85 }
                     MouseArea { id: discardBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: { overlayWin.current = null; if (overlayWin.pinned.length === 0) measureVariants.hide() }
-                        onEntered: TooltipService.show(discardBtn, "Discard"); onExited: TooltipService.hide()
+                        onEntered: TooltipService.show(discardBtn, overlayWin._tr("measure.discard")); onExited: TooltipService.hide()
                     }
                 }
             }
@@ -495,7 +495,7 @@ Variants {
                         NIcon { anchors.centerIn: parent; icon: "copy"; color: pcopyBtn.containsMouse ? Color.mOnPrimary : Color.mOnSurface; scale: 0.8 }
                         MouseArea { id: pcopyBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                             onClicked: { measureVariants.copyResult(mdist + "px (" + Math.round(mw) + "×" + Math.round(mh) + ")"); ToastService.showNotice(overlayWin._tr("messages.measure-copied")) }
-                            onEntered: TooltipService.show(pcopyBtn, "Copy"); onExited: TooltipService.hide()
+                            onEntered: TooltipService.show(pcopyBtn, overlayWin._tr("measure.copy")); onExited: TooltipService.hide()
                         }
                     }
 
@@ -505,7 +505,7 @@ Variants {
                         NIcon { anchors.centerIn: parent; icon: "camera"; color: pscreenshotBtn.containsMouse ? Color.mOnPrimary : Color.mOnSurface; scale: 0.8 }
                         MouseArea { id: pscreenshotBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                             onClicked: overlayWin.doScreenshot(mdata, mdata.color)
-                            onEntered: TooltipService.show(pscreenshotBtn, "Screenshot with lines"); onExited: TooltipService.hide()
+                            onEntered: TooltipService.show(pscreenshotBtn, overlayWin._tr("measure.screenshot")); onExited: TooltipService.hide()
                         }
                     }
 
@@ -515,7 +515,7 @@ Variants {
                         NIcon { anchors.centerIn: parent; icon: "x"; color: premoveBtn.containsMouse ? Color.mError || "#f44336" : Color.mOnSurface; scale: 0.8 }
                         MouseArea { id: premoveBtn; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                             onClicked: overlayWin.removePinned(myIdx)
-                            onEntered: TooltipService.show(premoveBtn, "Remove"); onExited: TooltipService.hide()
+                            onEntered: TooltipService.show(premoveBtn, overlayWin._tr("measure.remove")); onExited: TooltipService.hide()
                         }
                     }
                 }
