@@ -23,7 +23,11 @@ Item {
 
   anchors.fill: parent
 
-  Component.onCompleted: Qt.callLater(() => { panelReady = true })
+  Timer {
+    id: readyTimer; interval: 400; repeat: false; running: false
+    onTriggered: panelReady = true
+  }
+  Component.onCompleted: readyTimer.start()
 
   property var cfg: pluginApi?.pluginSettings || ({})
   property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
