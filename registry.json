@@ -118,6 +118,20 @@
       "lastUpdated": "2026-02-23T20:48:07-05:00"
     },
     {
+      "id": "coin-flip",
+      "name": "Coin Flipper",
+      "version": "1.1.0",
+      "official": false,
+      "author": "DanisDeveloper",
+      "description": "Simple bar widget with notification about result",
+      "repository": "https://github.com/noctalia-dev/noctalia-plugins",
+      "license": "MIT",
+      "tags": [
+        "Bar"
+      ],
+      "lastUpdated": "2026-03-12T21:45:04-04:00"
+    },
+    {
       "id": "color-scheme-creator",
       "name": "Color Scheme Creator",
       "version": "1.0.1",
@@ -179,6 +193,21 @@
         "Fun"
       ],
       "lastUpdated": "2026-03-10T23:16:33+01:00"
+    },
+    {
+      "id": "deskvis",
+      "name": "DeskVis",
+      "version": "2.0.0",
+      "official": false,
+      "author": "HAVEKziad",
+      "description": "Audio visualizer desktop widget — bars, wave, or mirror. Supports all directions. Transparent, follows color scheme.",
+      "minNoctaliaVersion": "4.6.6",
+      "license": "MIT",
+      "tags": [
+        "Desktop",
+        "Audio"
+      ],
+      "lastUpdated": "2026-03-12T14:35:45Z"
     },
     {
       "id": "dns-switcher",
@@ -795,6 +824,22 @@
         "Utility"
       ],
       "lastUpdated": "2026-02-19T17:33:45-05:00"
+    },
+    {
+      "id": "show-keys",
+      "name": "Show Keys",
+      "version": "1.0.0",
+      "official": false,
+      "author": "onez3r0",
+      "description": "Floating OSD that displays keyboard input in real-time via evtest.",
+      "repository": "https://github.com/noctalia-dev/noctalia-plugins",
+      "minNoctaliaVersion": "3.6.0",
+      "license": "MIT",
+      "tags": [
+        "Indicator",
+        "System"
+      ],
+      "lastUpdated": "2026-03-13T00:20:37+08:00"
     },
     {
       "id": "simple-notes",

@@ -1,0 +1,54 @@
+{
+    "settings": {
+        "capture": {
+            "label": "Capture Enabled",
+            "description": "Start or stop keyboard event capture"
+        },
+        "ipc": {
+            "title": "IPC Commands",
+            "toggleCommand": "Toggle Capture: qs -c noctalia-shell ipc call plugin:show-keys toggle"
+        },
+        "device": {
+            "label": "Device Path (IMPORTANT)",
+            "description": "Your keyboard device event path, RESTART noctalia-shell to apply changes.",
+            "placeholder": "/dev/input/event3"
+        },
+        "guide": {
+            "title": "Setup Guide",
+            "steps": "• FIRST-TIME users: RUN 'sudo evtest' (requirement) to find your device path.\n• ADD your user to the 'input' group (RUN 'sudo usermod -aG input $USER'), then REBOOT (only required once)."
+        },
+        "position": {
+            "label": "OSD Position",
+            "description": "Where the key overlay appears on screen",
+            "bottom": "Bottom",
+            "top": "Top"
+        },
+        "margin": {
+            "label": "Edge Margin",
+            "description": "Distance from screen edge: {value} px"
+        },
+        "delay": {
+            "label": "Auto-hide Delay",
+            "description": "Seconds before OSD fades out: {value} s"
+        },
+        "pillColor": {
+            "label": "Pill Text Color",
+            "description": "Color of the key label text"
+        },
+        "pillBg": {
+            "label": "Pill Background Color",
+            "description": "Background color of each key pill"
+        },
+        "useCustomColors": {
+            "label": "Use Custom Colors",
+            "description": "Override your Noctalia shell theme colors"
+        },
+        "monitors": {
+            "label": "Active Monitors",
+            "description": "Select which monitors will display the key overlay"
+        },
+        "preview": {
+            "label": "Preview"
+        }
+    }
+}

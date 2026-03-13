@@ -1,0 +1,54 @@
+{
+    "settings": {
+        "capture": {
+            "label": "启用捕获",
+            "description": "启动或停止键盘事件捕获"
+        },
+        "ipc": {
+            "title": "IPC 命令",
+            "toggleCommand": "切换捕获：qs -c noctalia-shell ipc call plugin:show-keys toggle"
+        },
+        "device": {
+            "label": "设备路径（重要）",
+            "description": "键盘设备事件路径，修改后需要重启 noctalia-shell 才能生效。",
+            "placeholder": "/dev/input/event3"
+        },
+        "guide": {
+            "title": "设置指南",
+            "steps": "• 首次使用：运行 'sudo evtest'（需要系统包）以查找设备路径。\n• 将用户添加到 'input' 用户组（运行 'sudo usermod -aG input $USER'），然后重启系统（仅需一次）。"
+        },
+        "position": {
+            "label": "OSD 位置",
+            "description": "按键浮窗在屏幕上的显示位置",
+            "bottom": "底部",
+            "top": "顶部"
+        },
+        "margin": {
+            "label": "边缘间距",
+            "description": "距屏幕边缘距离：{value} 像素"
+        },
+        "delay": {
+            "label": "自动隐藏延迟",
+            "description": "OSD 淡出前的等待时间：{value} 秒"
+        },
+        "pillColor": {
+            "label": "按键文字颜色",
+            "description": "按键标签的文字颜色"
+        },
+        "pillBg": {
+            "label": "按键背景颜色",
+            "description": "每个按键胶囊的背景颜色"
+        },
+        "useCustomColors": {
+            "label": "使用自定义颜色",
+            "description": "覆盖您的 Noctalia shell 主题配色方案"
+        },
+        "monitors": {
+            "label": "活跃显示器",
+            "description": "选择在哪些显示器上显示按键浮窗"
+        },
+        "preview": {
+            "label": "预览"
+        }
+    }
+}
