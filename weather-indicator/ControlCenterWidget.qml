@@ -41,7 +41,7 @@ NIconButtonHot {
                 break
             }
             default:
-                Logger.i("WeatherIndicator", `tooltipOption option: ${root.tooltipOption} not recongnized.`);
+                Logger.e("WeatherIndicator", `tooltipOption option: ${root.tooltipOption} not recongnized.`);
         }
         return allRows
             }
