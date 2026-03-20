@@ -16,7 +16,13 @@
     "empty": "No notes yet",
     "create-first": "Click + to create your first note",
     "delete-confirm": "Delete this note?",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "close": "Close",
+    "window-title": "Sticky Note",
+    "mode-preview": "Preview",
+    "mode-edit": "Editing",
+    "switch-preview": "Preview",
+    "switch-edit": "Edit"
   },
   "editor": {
     "back": "Back to list",

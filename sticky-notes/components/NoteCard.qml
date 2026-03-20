@@ -16,6 +16,7 @@ Rectangle {
   required property string content
   required property string noteColor
   required property string modifiedStr
+  required property double modified
 
   // Parent-provided state
   property int editingIndex: -1
@@ -31,6 +32,7 @@ Rectangle {
   signal editClicked()
   signal deleteClicked()
   signal cancelClicked()
+  signal expandClicked()
 
   HoverHandler { id: cardHover }
 
@@ -47,11 +49,12 @@ Rectangle {
   color: noteCard.noteColor || "#FFF9C4"
   radius: Style.radiusM
   border.color: isEditing
-    ? Color.mPrimary
+    ? (editTextArea.activeFocus ? Qt.darker(Color.mPrimary, 1.35) : Color.mPrimary)
     : Qt.darker(noteCard.noteColor || "#FFF9C4", 1.06)
   border.width: isEditing ? 2 : 1
 
   Behavior on border.color { ColorAnimation { duration: 150 } }
+  Behavior on border.width { NumberAnimation { duration: 150 } }
   Behavior on height { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
 
   // Shadow
@@ -148,6 +151,28 @@ Rectangle {
         width: 28 * Style.uiScaleRatio
         height: 28 * Style.uiScaleRatio
         radius: width / 2
+        color: expandBtnArea.containsMouse ? Qt.rgba(0, 0, 0, 0.12) : Qt.rgba(0, 0, 0, 0.06)
+
+        NIcon {
+          anchors.centerIn: parent
+          icon: "arrow-up-left"
+          pointSize: Style.fontSizeS
+          color: "#37474F"
+        }
+
+        MouseArea {
+          id: expandBtnArea
+          anchors.fill: parent
+          hoverEnabled: true
+          cursorShape: Qt.PointingHandCursor
+          onClicked: noteCard.expandClicked()
+        }
+      }
+
+      Rectangle {
+        width: 28 * Style.uiScaleRatio
+        height: 28 * Style.uiScaleRatio
+        radius: width / 2
         color: copyBtnArea.containsMouse ? Qt.rgba(0, 0, 0, 0.12) : Qt.rgba(0, 0, 0, 0.06)
 
         NIcon {
@@ -223,6 +248,7 @@ Rectangle {
           onClicked: noteCard.confirmingDelete = true
         }
       }
+
     }
   }
 
@@ -358,37 +384,37 @@ Rectangle {
           persistentSelection: true
 
           Shortcut {
-            sequence: StandardKey.Copy
+            sequences: [StandardKey.Copy]
             enabled: editTextArea.activeFocus
             onActivated: editTextArea.copy()
           }
 
           Shortcut {
-            sequence: StandardKey.Cut
+            sequences: [StandardKey.Cut]
             enabled: editTextArea.activeFocus
             onActivated: editTextArea.cut()
           }
 
           Shortcut {
-            sequence: StandardKey.Paste
+            sequences: [StandardKey.Paste]
             enabled: editTextArea.activeFocus
             onActivated: editTextArea.paste()
           }
 
           Shortcut {
-            sequence: StandardKey.SelectAll
+            sequences: [StandardKey.SelectAll]
             enabled: editTextArea.activeFocus
             onActivated: editTextArea.selectAll()
           }
 
           Shortcut {
-            sequence: StandardKey.Undo
+            sequences: [StandardKey.Undo]
             enabled: editTextArea.activeFocus
             onActivated: editTextArea.undo()
           }
 
           Shortcut {
-            sequence: StandardKey.Redo
+            sequences: [StandardKey.Redo]
             enabled: editTextArea.activeFocus
             onActivated: editTextArea.redo()
           }

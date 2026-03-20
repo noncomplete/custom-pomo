@@ -16,7 +16,13 @@
     "empty": "暂无笔记",
     "create-first": "点击 + 创建你的第一条笔记",
     "delete-confirm": "确定删除这条笔记？",
-    "cancel": "取消"
+    "cancel": "取消",
+    "close": "关闭",
+    "window-title": "便签详情",
+    "mode-preview": "预览",
+    "mode-edit": "编辑",
+    "switch-preview": "切到预览",
+    "switch-edit": "切到编辑"
   },
   "editor": {
     "back": "返回列表",

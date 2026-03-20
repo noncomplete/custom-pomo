@@ -14,6 +14,7 @@ Item {
 
   signal saveRequested(string noteId, string content, string saveColor)
   signal deleteRequested(string noteId)
+  signal expandRequested(string noteId, string content, string noteColor, string modifiedStr, double modified)
 
   // Editing state
   property string newNoteColor: ""
@@ -79,6 +80,14 @@ Item {
     if (!activeCard) return;
 
     root.finishEditing(activeCard.getEditedText(), activeCard.noteColor);
+  }
+
+  function openExpanded(index, noteId, content, noteColor, modifiedStr, modified) {
+    if (root.hasActiveEditor && root.editingNoteId !== noteId) {
+      root.saveActiveEditor();
+    }
+
+    root.expandRequested(noteId, content, noteColor || "#FFF9C4", modifiedStr || "", modified || 0);
   }
 
   Shortcut {
@@ -177,6 +186,10 @@ Item {
 
             onCancelClicked: {
               root.cancelEditing();
+            }
+
+            onExpandClicked: {
+              root.openExpanded(index, noteId, content, noteColor, modifiedStr, modified);
             }
           }
         }

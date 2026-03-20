@@ -17,8 +17,10 @@ Rectangle {
   height: 200 * Style.uiScaleRatio
   color: noteColor
   radius: Style.radiusM
-  border.color: Color.mPrimary
+  border.color: textArea.activeFocus ? Qt.darker(Color.mPrimary, 1.35) : Color.mPrimary
   border.width: 2
+
+  Behavior on border.color { ColorAnimation { duration: 150 } }
 
   // Save button (top-right)
   Rectangle {
@@ -75,37 +77,37 @@ Rectangle {
         focus: newNoteCard.visible
 
         Shortcut {
-          sequence: StandardKey.Copy
+          sequences: [StandardKey.Copy]
           enabled: textArea.activeFocus
           onActivated: textArea.copy()
         }
 
         Shortcut {
-          sequence: StandardKey.Cut
+          sequences: [StandardKey.Cut]
           enabled: textArea.activeFocus
           onActivated: textArea.cut()
         }
 
         Shortcut {
-          sequence: StandardKey.Paste
+          sequences: [StandardKey.Paste]
           enabled: textArea.activeFocus
           onActivated: textArea.paste()
         }
 
         Shortcut {
-          sequence: StandardKey.SelectAll
+          sequences: [StandardKey.SelectAll]
           enabled: textArea.activeFocus
           onActivated: textArea.selectAll()
         }
 
         Shortcut {
-          sequence: StandardKey.Undo
+          sequences: [StandardKey.Undo]
           enabled: textArea.activeFocus
           onActivated: textArea.undo()
         }
 
         Shortcut {
-          sequence: StandardKey.Redo
+          sequences: [StandardKey.Redo]
           enabled: textArea.activeFocus
           onActivated: textArea.redo()
         }

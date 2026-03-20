@@ -1,14 +1,9 @@
 import QtQuick
-import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell
 import qs.Commons
-import qs.Services.UI
-import qs.Widgets
-
-import "utils/storage.js" as Storage
 import "components" as Components
+import "utils/storage.js" as Storage
 
 // Panel Component — Main sticky-note interface
 Item {
@@ -80,98 +75,26 @@ Item {
 
   function loadNotes() {
     notesModel.clear();
-    if (!root.pluginApi) return;
+    if (!root.pluginApi || !root.pluginApi.mainInstance) return;
 
-    var stored = root.pluginApi.pluginSettings.notes;
-    if (!stored || stored.length === 0) return;
-
-    try {
-      var notes = JSON.parse(stored);
-      var needsPersist = false;
-      for (var i = 0; i < notes.length; i++) {
-        notes[i].modifiedStr = Storage.formatDate(new Date(notes[i].modified), root.pluginApi);
-        // Migrate: assign color to old notes that don't have one
-        if (!notes[i].color || notes[i].color === "") {
-          notes[i].color = Storage.pickRandomColor();
-          needsPersist = true;
-        }
-        
-        notes[i].noteColor = notes[i].color;
-        notesModel.append(notes[i]);
-      }
-      // Persist migrated colors so they stay consistent
-      if (needsPersist) persistNotes();
-    } catch (e) {
-      Logger.e("MdNote", "Failed to parse notes: " + e);
+    var notes = root.pluginApi.mainInstance.getDisplayNotes();
+    for (var i = 0; i < notes.length; i++) {
+      notesModel.append(notes[i]);
     }
   }
 
   function saveNote(noteId, content, saveColor) {
-    var now = Date.now();
-    var isNew = (!noteId || noteId.length === 0);
-
-    if (isNew) {
-      noteId = Storage.generateNoteId();
+    if (root.pluginApi?.mainInstance) {
+      root.pluginApi.mainInstance.saveNote(noteId, content, saveColor);
     }
-
-    var finalColor = saveColor;
-    var foundIndex = -1;
-    for (var i = 0; i < notesModel.count; i++) {
-      if (notesModel.get(i).noteId === noteId) {
-        finalColor = notesModel.get(i).noteColor || finalColor;
-        foundIndex = i;
-        break;
-      }
-    }
-
-    var note = {
-      noteId: noteId,
-      content: content,
-      modified: now,
-      modifiedStr: Storage.formatDate(new Date(now), root.pluginApi),
-      noteColor: finalColor || Storage.pickRandomColor(),
-      color: finalColor || Storage.pickRandomColor()
-    };
-
-    if (foundIndex >= 0) {
-      notesModel.set(foundIndex, note);
-    } else {
-      notesModel.insert(0, note);
-    }
-
-    persistNotes();
-    Logger.i("MdNote", "Note saved: " + noteId);
+    loadNotes();
   }
 
   function deleteNote(noteId) {
-    for (var i = 0; i < notesModel.count; i++) {
-      if (notesModel.get(i).noteId === noteId) {
-        notesModel.remove(i);
-        break;
-      }
+    if (root.pluginApi?.mainInstance) {
+      root.pluginApi.mainInstance.deleteNote(noteId);
     }
-    persistNotes();
-    Logger.i("MdNote", "Note deleted: " + noteId);
-  }
-
-  function persistNotes() {
-    if (!root.pluginApi) return;
-    var notes = [];
-    for (var i = 0; i < notesModel.count; i++) {
-      var item = notesModel.get(i);
-      notes.push({
-        noteId: item.noteId,
-        content: item.content,
-        modified: item.modified,
-        color: item.noteColor
-      });
-    }
-    root.pluginApi.pluginSettings.notes = JSON.stringify(notes);
-    root.pluginApi.saveSettings();
-
-    if (root.pluginApi.mainInstance) {
-      root.pluginApi.mainInstance.syncNotesToGist(notes, true);
-    }
+    loadNotes();
   }
 
   // ── UI ─────────────────────────────────────────────────
@@ -194,6 +117,20 @@ Item {
 
       onDeleteRequested: function(noteId) {
         root.deleteNote(noteId);
+      }
+
+      onExpandRequested: function(noteId, content, noteColor, modifiedStr, modified) {
+        if (root.pluginApi?.mainInstance && root.pluginApi?.panelOpenScreen) {
+          root.pluginApi.mainInstance.openExpandedNote(root.pluginApi.panelOpenScreen, noteId, content, noteColor, modifiedStr, modified);
+        }
+      }
+    }
+
+    Connections {
+      target: root.pluginApi?.mainInstance || null
+
+      function onNotesChanged() {
+        root.loadNotes();
       }
     }
   }
