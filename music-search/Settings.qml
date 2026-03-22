@@ -61,6 +61,9 @@ ColumnLayout {
   readonly property bool showHomePlaylists: pluginApi?.pluginSettings?.showHomePlaylists
       ?? root.defaults.showHomePlaylists
       ?? true
+  readonly property bool showBarHoverTrackTitle: pluginApi?.pluginSettings?.showBarHoverTrackTitle
+      ?? root.defaults.showBarHoverTrackTitle
+      ?? true
   readonly property bool autoSaveMp3AfterPlayback: pluginApi?.pluginSettings?.autoSaveMp3AfterPlayback
       ?? root.defaults.autoSaveMp3AfterPlayback
       ?? false
@@ -256,6 +259,26 @@ ColumnLayout {
     checked: root.showHomePlaylists
     onToggled: root.saveSetting("showHomePlaylists", checked)
     defaultValue: root.defaults.showHomePlaylists ?? true
+  }
+
+  NDivider {
+    Layout.fillWidth: true
+  }
+
+  NText {
+    Layout.fillWidth: true
+    text: pluginApi?.tr("settings.bar.title")
+    pointSize: Style.fontSizeM
+    font.weight: Style.fontWeightBold
+    color: Color.mOnSurface
+  }
+
+  NToggle {
+    label: pluginApi?.tr("settings.bar.hoverTitle.label")
+    description: pluginApi?.tr("settings.bar.hoverTitle.desc")
+    checked: root.showBarHoverTrackTitle
+    onToggled: root.saveSetting("showBarHoverTrackTitle", checked)
+    defaultValue: root.defaults.showBarHoverTrackTitle ?? true
   }
 
   NDivider {

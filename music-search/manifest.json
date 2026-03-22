@@ -42,6 +42,7 @@
       "showHomeTags": true,
       "showHomeArtists": true,
       "showHomePlaylists": true,
+      "showBarHoverTrackTitle": true,
       "autoSaveMp3AfterPlayback": false,
       "ytPlayerClient": "android"
     }

@@ -378,6 +378,13 @@
       "label": "Save remote tracks as mp3 after playback starts",
       "desc": "After a YouTube or SoundCloud track successfully starts playing, also save an mp3 copy into the current download folder."
     },
+    "bar": {
+      "title": "Bar Widget",
+      "hoverTitle": {
+        "label": "Show track title on hover",
+        "desc": "Expand the bar widget on hover to show and scroll the current track title."
+      }
+    },
     "home": {
       "title": "Home",
       "recent": {
