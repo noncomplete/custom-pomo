@@ -76,7 +76,7 @@ DraggableDesktopWidget {
 
                 // Row 1: Distribution
                 NText { 
-                    text: pluginApi?.tr("widget.distribution") ?? "Distribution"
+                    text: pluginApi?.tr("widget.distribution")"
                     color: Color.mOnSurfaceVariant
                     font.pointSize: Style.fontSizeL * widgetScale
                 }
@@ -91,7 +91,7 @@ DraggableDesktopWidget {
 
                 // Row 2: Kernel
                 NText { 
-                    text: pluginApi?.tr("widget.kernel") ?? "Kernel"
+                    text: pluginApi?.tr("widget.kernel")"
                     color: Color.mOnSurfaceVariant
                     font.pointSize: Style.fontSizeL * widgetScale
                 }
@@ -107,7 +107,7 @@ DraggableDesktopWidget {
 
                 // Row 3: Uptime
                 NText { 
-                    text: pluginApi?.tr("widget.uptime") ?? "Uptime"
+                    text: pluginApi?.tr("widget.uptime")"
                     color: Color.mOnSurfaceVariant
                     font.pointSize: Style.fontSizeL * widgetScale
                 }
