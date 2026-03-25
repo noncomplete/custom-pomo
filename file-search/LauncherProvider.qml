@@ -9,7 +9,7 @@ Item {
   property var pluginApi: null
 
   // Provider metadata
-  property string name: "File Search"
+  property string name: pluginApi?.tr("provider.name")
   property var launcher: null
   property bool handleSearch: false
   property string supportedLayouts: "list"
@@ -23,10 +23,13 @@ Item {
   property bool fdAvailable: false
 
   // Settings shortcuts
-  property bool showHidden: pluginApi?.pluginSettings?.showHidden ?? pluginApi?.manifest?.metadata?.defaultSettings?.showHidden ?? false
-  property int maxResults: pluginApi?.pluginSettings?.maxResults ?? pluginApi?.manifest?.metadata?.defaultSettings?.maxResults ?? 0
-  property string fileOpener: pluginApi?.pluginSettings?.fileOpener ?? pluginApi?.manifest?.metadata?.defaultSettings?.fileOpener ?? "xdg-open"
-  property string searchDirectory: pluginApi?.pluginSettings?.searchDirectory ?? pluginApi?.manifest?.metadata?.defaultSettings?.searchDirectory ?? "~"
+  property var cfg: pluginApi?.pluginSettings || ({})
+  property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
+  property bool showHidden: cfg.showHidden ?? defaults.showHidden ?? false
+  property int maxResults: cfg.maxResults ?? defaults.maxResults ?? 0
+  property string fileOpener: cfg.fileOpener ?? defaults.fileOpener ?? "xdg-open"
+  property string fdCommand: cfg.fdCommand ?? defaults.fdCommand ?? "fd"
+  property string searchDirectory: cfg.searchDirectory ?? defaults.searchDirectory ?? "~"
 
   // Debounce timer for search
   Timer {
@@ -59,8 +62,8 @@ Item {
         Logger.e("FileSearch", "stderr:", stderrCollector.text);
         
         root.currentResults = [{
-          "name": "fd not found",
-          "description": "Please install fd to use file search.",
+          "name": pluginApi?.tr("launcher.errors.fdNotFound.title"),
+          "description": pluginApi?.tr("launcher.errors.fdNotFound.description"),
           "icon": "alert-circle",
           "isTablerIcon": true,
           "onActivate": function() {}
@@ -75,7 +78,7 @@ Item {
 
   function init() {
     Logger.i("FileSearch", "Initializing plugin");
-    fdCommandPath = pluginApi?.pluginSettings?.fdCommand ?? "fd";
+    fdCommandPath = fdCommand;
     fdAvailable = true;
     Logger.i("FileSearch", "Using fd command:", fdCommandPath);
   }
@@ -87,7 +90,7 @@ Item {
   function commands() {
     return [{
       "name": ">file",
-      "description": "Search for files",
+      "description": pluginApi?.tr("launcher.command.description"),
       "icon": "file-search",
       "isTablerIcon": true,
       "isImage": false,
@@ -104,8 +107,8 @@ Item {
 
     if (!fdAvailable) {
       return [{
-        "name": "fd not found",
-        "description": "Please install fd to use file search",
+        "name": pluginApi?.tr("launcher.errors.fdNotFound.title"),
+        "description": pluginApi?.tr("launcher.errors.fdNotFound.description"),
         "icon": "alert-circle",
         "isTablerIcon": true,
         "isImage": false,
@@ -117,8 +120,8 @@ Item {
 
     if (query === "") {
       return [{
-        "name": "Type to search files",
-        "description": "Start typing to search for files",
+        "name": pluginApi?.tr("launcher.prompts.emptyQuery.title"),
+        "description": pluginApi?.tr("launcher.prompts.emptyQuery.description"),
         "icon": "file-search",
         "isTablerIcon": true,
         "isImage": false,
@@ -132,8 +135,8 @@ Item {
       searchDebouncer.restart();
       
       return [{
-        "name": "Searching...",
-        "description": "Looking for files matching: " + query,
+        "name": pluginApi?.tr("launcher.prompts.searching.title"),
+        "description": pluginApi?.tr("launcher.prompts.searching.description", { "query": query }),
         "icon": "refresh",
         "isTablerIcon": true,
         "isImage": false,
@@ -143,8 +146,8 @@ Item {
 
     if (searching) {
       return [{
-        "name": "Searching...",
-        "description": "Looking for files matching: " + query,
+        "name": pluginApi?.tr("launcher.prompts.searching.title"),
+        "description": pluginApi?.tr("launcher.prompts.searching.description", { "query": query }),
         "icon": "refresh",
         "isTablerIcon": true,
         "isImage": false,
@@ -201,8 +204,8 @@ Item {
 
     if (lines.length === 0 || (lines.length === 1 && lines[0] === "")) {
       results.push({
-        "name": "No results found",
-        "description": "No files matching '" + currentQuery + "'",
+        "name": pluginApi?.tr("launcher.prompts.noResults.title"),
+        "description": pluginApi?.tr("launcher.prompts.noResults.description", { "query": currentQuery }),
         "icon": "file-off",
         "isTablerIcon": true,
         "isImage": false,
