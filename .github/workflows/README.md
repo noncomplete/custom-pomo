@@ -2,7 +2,7 @@
 
 This directory contains automation scripts for maintaining the plugin registry.
 
-## update-registry.js
+## update-registry.mjs
 
 Automatically scans plugin directories and updates `registry.json` with current plugin metadata.
 

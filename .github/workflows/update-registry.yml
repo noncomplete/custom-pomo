@@ -27,7 +27,7 @@ jobs:
           node-version: 24
       
       - name: Run registry update script
-        run: node .github/workflows/update-registry.js
+        run: node .github/workflows/update-registry.mjs
       
       - name: Check for changes
         id: check_changes
