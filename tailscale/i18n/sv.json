@@ -39,12 +39,15 @@
     "copy-ip": "Kopiera IP",
     "copy-fqdn": "Kopiera FQDN",
     "ssh": "SSH till värd",
-    "ping": "Pinga värd"
+    "ping": "Pinga värd",
+    "use-exit-node": "Använd som utgångsnod"
   },
   "toast": {
     "title": "Tailscale",
     "connected": "Tailscale ansluten",
     "disconnected": "Tailscale frånkopplad",
+    "exit-node-enabled": "Utgångsnod aktiverad",
+    "exit-node-disabled": "Utgångsnod inaktiverad",
     "ip-copied": {
       "title": "IP kopierad"
     },
@@ -71,7 +74,8 @@
     "exit-node": {
       "active": "Utgångsnod aktiv",
       "online": "Online",
-      "offline": "Offline"
+      "offline": "Offline",
+      "disable": "Inaktivera utgångsnod"
     }
   }
 }

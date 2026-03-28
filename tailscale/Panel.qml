@@ -121,6 +121,19 @@ Item {
     }
   }
 
+  function useExitNode(peer) {
+    var ips = filterIPv4(peer.TailscaleIPs)
+    if (ips.length > 0 && mainInstance) {
+      mainInstance.setExitNode(ips[0])
+    }
+  }
+
+  function clearExitNode() {
+    if (mainInstance) {
+      mainInstance.clearExitNode()
+    }
+  }
+
   function executePeerAction(action, peer) {
     selectedPeer = peer
     switch (action) {
@@ -135,6 +148,9 @@ Item {
         break
       case "ping":
         pingSelectedPeer()
+        break
+      case "use-exit-node":
+        useExitNode(peer)
         break
     }
   }
@@ -164,6 +180,12 @@ Item {
         action: "ping", 
         icon: "activity",
         enabled: root.isTerminalConfigured
+      },
+      {
+        label: pluginApi?.tr("context.use-exit-node"),
+        action: "use-exit-node",
+        icon: "globe",
+        enabled: (root.selectedPeer?.ExitNodeOption || false) && (root.selectedPeer?.Online || false)
       }
     ]
     onTriggered: function(action) {
@@ -179,6 +201,9 @@ Item {
           break
         case "ping":
           root.pingSelectedPeer()
+          break
+        case "use-exit-node":
+          root.useExitNode(root.selectedPeer)
           break
       }
     }
@@ -247,8 +272,8 @@ Item {
       if (a.Online && !b.Online) return -1
       if (!a.Online && b.Online) return 1
       // Then alphabetically by hostname
-      var nameA = (a.HostName || a.DNSName || "").toLowerCase()
-      var nameB = (b.HostName || b.DNSName || "").toLowerCase()
+      var nameA = (a.HostName || normalizeFqdn(a.DNSName) || "").toLowerCase()
+      var nameB = (b.HostName || normalizeFqdn(b.DNSName) || "").toLowerCase()
       return nameA.localeCompare(nameB)
     })
     return peers
@@ -469,7 +494,7 @@ Item {
 
                   readonly property var peerData: modelData
                   readonly property string peerIp: filterIPv4(peerData.TailscaleIPs)[0] || ""
-                  readonly property string peerHostname: peerData.HostName || peerData.DNSName || "Unknown"
+                  readonly property string peerHostname: peerData.HostName || normalizeFqdn(peerData.DNSName) || "Unknown"
                   readonly property bool peerOnline: peerData.Online || false
 
                   background: Rectangle {
@@ -495,6 +520,14 @@ Item {
                       font.weight: Style.fontWeightMedium
                       elide: Text.ElideRight
                       Layout.fillWidth: true
+                    }
+
+                    NIcon {
+                      icon: "globe"
+                      pointSize: Style.fontSizeS
+                      color: peerDelegate.peerData.ExitNode ? Color.mPrimary : Qt.alpha(Color.mOnSurfaceVariant, 0.4)
+                      visible: peerDelegate.peerData.ExitNode || peerDelegate.peerData.ExitNodeOption
+                      Layout.alignment: Qt.AlignRight
                     }
 
                     NText {
@@ -543,6 +576,14 @@ Item {
         onClicked: {
           Qt.openUrlExternally("https://login.tailscale.com/admin")
         }
+      }
+
+      NButton {
+        Layout.fillWidth: true
+        visible: mainInstance?.exitNodeStatus !== null && mainInstance?.exitNodeStatus !== undefined
+        text: pluginApi?.tr("panel.exit-node.disable")
+        icon: "globe-off"
+        onClicked: root.clearExitNode()
       }
 
       NButton {

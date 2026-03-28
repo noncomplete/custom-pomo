@@ -39,12 +39,15 @@
     "copy-ip": "Copier l'IP",
     "copy-fqdn": "Copier le FQDN",
     "ssh": "SSH vers l'hôte",
-    "ping": "Ping l'hôte"
+    "ping": "Ping l'hôte",
+    "use-exit-node": "Utiliser comme nœud de sortie"
   },
   "toast": {
     "title": "Tailscale",
     "connected": "Tailscale connecté",
     "disconnected": "Tailscale déconnecté",
+    "exit-node-enabled": "Nœud de sortie activé",
+    "exit-node-disabled": "Nœud de sortie désactivé",
     "ip-copied": {
       "title": "IP copiée"
     },
@@ -71,7 +74,8 @@
     "exit-node": {
       "active": "Nœud de sortie actif",
       "online": "En ligne",
-      "offline": "Hors ligne"
+      "offline": "Hors ligne",
+      "disable": "Désactiver le nœud de sortie"
     }
   }
 }

@@ -39,12 +39,15 @@
     "copy-ip": "复制IP",
     "copy-fqdn": "复制FQDN",
     "ssh": "SSH到主机",
-    "ping": "Ping主机"
+    "ping": "Ping主机",
+    "use-exit-node": "用作出口节点"
   },
   "toast": {
     "title": "Tailscale",
     "connected": "Tailscale已连接",
     "disconnected": "Tailscale已断开",
+    "exit-node-enabled": "出口节点已激活",
+    "exit-node-disabled": "出口节点已禁用",
     "ip-copied": {
       "title": "IP已复制"
     },
@@ -71,7 +74,8 @@
     "exit-node": {
       "active": "出口节点已激活",
       "online": "在线",
-      "offline": "离线"
+      "offline": "离线",
+      "disable": "禁用出口节点"
     }
   }
 }
