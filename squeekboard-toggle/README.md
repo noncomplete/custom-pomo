@@ -11,16 +11,18 @@ A [Noctalia](https://github.com/noctalia) plugin that adds a bar widget to toggl
 
 ## How it works
 
-The plugin uses `gsettings` to read and write the GNOME accessibility setting `org.gnome.desktop.a11y.applications screen-keyboard-enabled`, which controls Squeekboard's visibility.
+The plugin uses `gsettings` to read and write the GNOME accessibility setting `org.gnome.desktop.a11y.applications screen-keyboard-enabled`, which controls Squeekboard's visibility. 
 
 ## Requirements
 
 - **Noctalia** ≥ 4.4.3
 - **Squeekboard** installed and running
 
-## For 2in1 Laptops
+Tested with squeekboard in mind. If other onscreen-keyboards also use `gsettings, it should also work.
 
-- **Niri** `switch-events` configured in `~/.config/niri/config.kdl`:
+### 2in1 Laptops 
+
+Tested with **Niri** `switch-events` configured in `~/.config/niri/config.kdl`:
   
 ```kdl
 switch-events {
