@@ -264,6 +264,11 @@ Item {
     websocketLoader.item.request(type, requestData ?? ({}), onSuccess, onFailure)
   }
 
+  function isReplayBufferUnavailable(message) {
+    return typeof message === "string"
+      && message.toLowerCase().includes("replay buffer is not available")
+  }
+
   function fetchObsStatus(onSuccess, onFailure) {
     const status = {
       recording: false,
@@ -303,7 +308,15 @@ Item {
     requestObs("GetReplayBufferStatus", {}, function(response) {
       status.replayBuffer = response?.outputActive ?? false
       complete()
-    }, fail)
+    }, function(message) {
+      if (isReplayBufferUnavailable(message)) {
+        status.replayBuffer = false
+        complete()
+        return
+      }
+
+      fail(message)
+    })
 
     requestObs("GetStreamStatus", {}, function(response) {
       status.streaming = response?.outputActive ?? false
@@ -349,7 +362,15 @@ Item {
     requestObs("GetReplayBufferStatus", {}, function(response) {
       state.replayActive = response?.outputActive ?? false
       complete()
-    }, fail)
+    }, function(message) {
+      if (isReplayBufferUnavailable(message)) {
+        state.replayActive = false
+        complete()
+        return
+      }
+
+      fail(message)
+    })
 
     requestObs("GetStreamStatus", {}, function(response) {
       state.streamActive = response?.outputActive ?? false
