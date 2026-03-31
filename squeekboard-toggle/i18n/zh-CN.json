@@ -1,0 +1,9 @@
+{
+  "tooltip": {
+    "active": "键盘已激活",
+    "hidden": "键盘已隐藏"
+  },
+  "menu": {
+    "settings": "小部件设置"
+  }
+}

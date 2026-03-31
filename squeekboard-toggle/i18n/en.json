@@ -1,0 +1,9 @@
+{
+  "tooltip": {
+    "active": "Keyboard active",
+    "hidden": "Keyboard hidden"
+  },
+  "menu": {
+    "settings": "Widget Settings"
+  }
+}

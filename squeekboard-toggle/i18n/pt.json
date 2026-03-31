@@ -1,0 +1,9 @@
+{
+  "tooltip": {
+    "active": "Teclado ativo",
+    "hidden": "Teclado oculto"
+  },
+  "menu": {
+    "settings": "Configurações do widget"
+  }
+}

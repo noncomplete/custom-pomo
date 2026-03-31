@@ -1,0 +1,9 @@
+{
+  "tooltip": {
+    "active": "鍵盤已啟用",
+    "hidden": "鍵盤已隱藏"
+  },
+  "menu": {
+    "settings": "小工具設定"
+  }
+}

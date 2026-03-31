@@ -1,0 +1,9 @@
+{
+  "tooltip": {
+    "active": "Toetsenbord actief",
+    "hidden": "Toetsenbord verborgen"
+  },
+  "menu": {
+    "settings": "Widget-instellingen"
+  }
+}
