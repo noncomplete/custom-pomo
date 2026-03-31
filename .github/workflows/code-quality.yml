@@ -125,81 +125,100 @@ jobs:
             if [ "$inBarWidget" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
               if [ "$hasScreen" = false ]; then
                 print_missing_property "$h_priority" 'screen' 'property ShellScreen screen'
+                issues=$((issues + 1))
               fi
               if [ "$hasWidgetId" = false ]; then
                 print_missing_property "$h_priority" 'widgetId' 'property string widgetId: ""'
+                issues=$((issues + 1))
               fi
               if [ "$hasSection" = false ]; then
                 print_missing_property "$h_priority" 'section' 'property string section: ""'
+                issues=$((issues + 1))
               fi
               if [ "$hasSectionWidgetIndex" = false ]; then
                 print_missing_property "$h_priority" 'sectionWidgetIndex' 'property int sectionWidgetIndex: -1'
+                issues=$((issues + 1))
               fi
               if [ "$hasSectionWidgetsCount" = false ]; then
                 print_missing_property "$h_priority" 'sectionWidgetsCount' 'property int sectionWidgetsCount: 0'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inDesktopWidget" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inDesktopWidgetSettings" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
               if [ "$hasWidgetSettings" = false ]; then
                 print_missing_property "$h_priority" 'widgetSettings' 'property var widgetSettings: null'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inControlCenterWidget" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
               if [ "$hasScreen" = false ]; then
                 print_missing_property "$h_priority" 'screen' 'property ShellScreen screen'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inLauncherProvider" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
               if [ "$hasLauncher" = false ]; then
                 print_missing_property "$h_priority" 'launcher' 'property var launcher: ""'
+                issues=$((issues + 1))
               fi
               if [ "$hasName" = false ]; then
                 print_missing_property "$h_priority" 'name' 'property string name: "Example"'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inMain" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inPanel" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
               if [ "$hasGeometryPlaceholder" = false ]; then
                 print_missing_property "$h_priority" 'geometryPlaceholder' 'readonly property var geometryPlaceholder: panelContainer'
+                issues=$((issues + 1))
               fi
               if [ "$hasAllowAttach" = false ]; then
                 print_missing_property "$h_priority" 'allowAttach' 'readonly property bool allowAttach: true'
+                issues=$((issues + 1))
               fi
             fi
 
             if [ "$inSettings" = true ]; then
               if [ "$hasPluginApi" = false ]; then
                 print_missing_property "$h_priority" 'pluginApi' 'property var pluginApi: null'
+                issues=$((issues + 1))
               fi
             fi
           }
@@ -244,7 +263,6 @@ jobs:
               echo "Current line index reset: $line_index"
             elif echo "$line" | grep -E "^+" >/dev/null; then
               # Only new lines should be auto checked for this type of code quality
-
               if echo "$line" | grep -E "(border(\.width)?|spacing|pointSize|radius|margin(s)?): [0-9]+" >/dev/null; then
                 print_line "$h_priority" "$line_index" 'Do not use hardcoded values, always prefer to use the `Style` singleton instead' "$line"
                 issues=$((issues + 1))
@@ -268,7 +286,6 @@ jobs:
                 issues=$((issues + 1))
               fi
             else
-
               # Check for required properties
               if [ "$inBarWidget" = true ]; then
                 if echo "$line" | grep -E 'property var pluginApi: null' >/dev/null; then
