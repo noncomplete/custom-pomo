@@ -4,18 +4,18 @@
     {
       "id": "pomodoro",
       "name": "Pomodoro",
-      "version": "1.2.0",
+      "version": "0.1",
       "official": false,
-      "author": "notprayasmitra",
+      "author": "noncomplete",
       "description": "A pomodoro timer plugin to help boost productivity.",
-      "repository": "https://github.com/noctalia-dev/noctalia-plugins",
+      "repository": "https://github.com/noncomplete/custom-pomo",
       "minNoctaliaVersion": "4.0.0",
       "license": "MIT",
       "tags": [
         "Bar",
         "Productivity"
       ],
-      "lastUpdated": "2026-04-01T21:52:23+06:00"
+      "lastUpdated": "2026-04-01T18:52:23+06:00"
     }
   ]
 }
